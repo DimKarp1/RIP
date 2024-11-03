@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="rus">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+
+<body>
+  <div class="header">
+    <div id="top-head">
+      <a href="{% url 'main' %}"><img id="img-logo" src="http://127.0.0.1:9000/lab1/logo.jpg"></a>
+    </div>
+    <div id="bottom-head">
+      {% block header %}{% endblock %}
+    </div>
+  </div>
+  <div class="space">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

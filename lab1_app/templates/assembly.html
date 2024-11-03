@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Сборка спутника{% endblock %}
+
+{% block header %}
+
+<form class="text-area" action="sendText" method="post"
+    enctype="multipart/form-data">
+    {% csrf_token %}
+    <input class="search-price" name="name" type="text"
+        placeholder="Название спутника"><br>
+    <input class="search-price" name="date" type="text"
+        placeholder="Дата полёта">
+    <!--<input class="button-search" class="find-button" type="submit"
+        value="Сохранить">-->
+</form>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-cart">
+    {% for component in data.components %}
+    <div class="card-cart">
+        <img class="cart-img" src="{{ component.imgSrc }}">
+        <div class="cart-div">
+            <p class="title-cart">{{ component.title }}</p>
+            <p class="short-description">{{ component.shortDescription }}</p>
+            <p class="price">{{ component.price }}</p>
+            <div class="button-more">{% include 'component_element.html' with element=component %}</div>
+        </div>
+        <form class="quantity" action="sendQuatity">
+            <input class="quantity-input" name="count" type="text" placeholder="0" value="{{ component.count }}">
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

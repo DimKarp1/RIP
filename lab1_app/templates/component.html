@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Компонент {{ data.id }}{% endblock %}
+
+{% block content %}
+    <div class="container-component">
+        <img class="component-img" src="{{ data.imgSrc}}">
+        <div class="component-div">
+            <p class="title">{{ data.title }}</p>
+            <p class="short-description">{{ data.description }}</p>
+            <p class="price">{{ data.price }}</p>
+        </div>        
+    </div>
+{% endblock %}

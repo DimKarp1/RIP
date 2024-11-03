@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Cubesat Main{% endblock %}
+
+{% block header %}
+
+<form class="text-area" action="{% url 'main' %}" method="get">
+    <p class="search-text">Цена:</p>
+    <input class="search-price" name="down" type="number" placeholder="От" value="{{ data.price_down }}">
+    <p class="search-dash">-</p>
+    <input class="search-price" name="up" type="number" placeholder="До" value="{{ data.price_up }}">
+    <input class="button-search" class="find-button" type="submit" value="Поиск">
+</form>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for component in data.components %}
+    <div class="card">
+        <img src="{{ component.imgSrc }}" class="image">
+        <p class="title">{{ component.title }}</p>
+        <p class="short-description">{{ component.shortDescription }}</p>
+        <p class="price">{{ component.price }}</p>
+        <div class="button-more">{% include 'component_element.html' with element=component %}</div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<a href="{% url 'assembly' %}">
+    <div class="cart">
+        <img src="http://127.0.0.1:9000/lab1/cart.png" class="cart-image">
+        {% if data.cart_counter != 0%}
+        <div class="counter">
+            {{ data.cart_counter }}
+        </div>
+        {% endif %}
+    </div>
+</a>
+
+{% endblock %}
