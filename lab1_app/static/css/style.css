@@ -222,6 +222,7 @@ a{
     font-size: 1rem;
     color: rgba(0, 0, 0, 0.51);
     background: #ecedeb;
+    border: none;
 }
 
 .button-search{
@@ -229,6 +230,12 @@ a{
     height:100%;
     text-align: center;
     background: #f56163;
+    border: none;
+    color: #fff;
+}
+
+.button-search:hover{
+    color: #000;
 }
 
 .find-button{
