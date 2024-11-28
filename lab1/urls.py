@@ -7,5 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.GetMain, name='main'),
     path('component/<int:id>/', views.GetComponent, name='component_url'),
-    path('assembly/', views.GetAssembly, name="assembly")
+    path('assembly/<int:id>/', views.GetAssembly, name="assembly")
 ]

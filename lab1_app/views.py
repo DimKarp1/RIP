@@ -9,11 +9,13 @@ components = [{'id': 1, 'title': 'Процессорный узел бортов
             {'id': 6, 'title': 'Оптический датчик IM200', 'shortDescription': 'Универсальный интеллектуальный оптический датчик.', 'description': 'Наш универсальный интеллектуальный оптический сканер IM200 имеет разрешение 4 мегапикселя, высокоскоростной интерфейс передачи данных и различные варианты объективов. Адаптивный видеодатчик IM200 основан на платформе ST200 Star Tracker. Благодаря выделенному высокоскоростному интерфейсу USB2.0 IM200 может снимать 5 кадров в секунду в полном разрешении.', 'price': '550000₽','imgSrc': 'http://127.0.0.1:9000/lab1/6.jpg'}\
 ]
 
-selected_components = [
-    {'id': 1, 'title': 'Процессорный узел бортового компьютера Xiphos Q7S', 'shortDescription': 'Решение для управления и передачи данных.', 'description': '', 'price': '2000000₽','imgSrc': 'http://127.0.0.1:9000/lab1/1.png', 'count': 2},
-    {'id': 2, 'title': 'Аккумулятор CubeSat AAC Clyde Space OPTIMUS', 'shortDescription': 'Один из лучших аккумуляторов космических аппаратов.', 'description': '', 'price': '900000₽','imgSrc': 'http://127.0.0.1:9000/lab1/2.jpg', 'count': 4},
-    {'id': 5, 'title': 'Солнечные батареи CubeSat PHOTON', 'shortDescription': 'Максимальная выработка энергии и простота интеграции.', 'description': '', 'price': '1500000₽','imgSrc': 'http://127.0.0.1:9000/lab1/5.jpg', 'count': 1},
+assemblies = [
+    {'id': 1, 'components': [{'id': 2, 'count': 1}, {'id': 3, 'count': 2}, {'id': 6, 'count': 3}], 'satelliteName': 'Markus I', 'flyDate': '2020-12-20'},
+    {'id': 2, 'components': [{'id': 1, 'count': 3}, {'id': 4, 'count': 3}], 'satelliteName': 'Markus II', 'flyDate': '2020-12-20'},
+    {'id': 3, 'components': [{'id': 5, 'count': 4}, {'id': 6, 'count': 3}], 'satelliteName': 'Markus III', 'flyDate': '2020-12-20'},
 ]
+
+curAssemblyId = 1
 
 def GetMain(request):
     input_down = request.GET.get('down', '')
@@ -30,11 +32,14 @@ def GetMain(request):
         input_down = ''
     if input_up == '999999999999':
         input_up = ''
+        
+    print(assemblies[curAssemblyId - 1].get('components'))
     return render(request, 'main.html', {'data' : {
+        'curAssemblyId': curAssemblyId,
         'components': search_components,
         'price_down': input_down,
         'price_up': input_up,
-        'cart_counter': len(selected_components)
+        'cart_counter': len(assemblies[curAssemblyId - 1].get('components'))
     }})    
     
 def GetComponent(request, id):
@@ -46,7 +51,17 @@ def GetComponent(request, id):
         'imgSrc': components[id-1]['imgSrc']
     }})
     
-def GetAssembly(request):
+def GetAssembly(request, id):
+    curAssembly = assemblies[id - 1]
+    selectedComponents = []
+    componentsCount = []
+    
+    for curComponent in curAssembly.get('components'):
+        for component in components:
+            if component['id'] == curComponent['id']:
+                component['count'] = curComponent['count']
+                selectedComponents.append(component)
+    
     return render(request, 'assembly.html', {'data' : {
-        'components': selected_components
+        'components': selectedComponents,
     }})

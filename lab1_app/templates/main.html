@@ -28,7 +28,7 @@
 
 </div>
 
-<a href="{% url 'assembly' %}">
+<a href="{% url 'assembly' data.curAssemblyId %}">
     <div class="cart">
         <img src="http://127.0.0.1:9000/lab1/cart.png" class="cart-image">
         {% if data.cart_counter != 0%}
