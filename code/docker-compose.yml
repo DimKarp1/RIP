@@ -51,6 +51,15 @@ services:
       - data4-1:/data1
       - data4-2:/data2
 
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "cubesat"
+      POSTGRES_USER: "user123"
+      POSTGRES_PASSWORD: "123"
+    ports:
+      - "6123:5432"
+
   nginx:
     image: nginx:stable-alpine3.20-perl
     hostname: nginx

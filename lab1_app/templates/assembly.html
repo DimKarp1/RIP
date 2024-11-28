@@ -8,10 +8,10 @@
     enctype="multipart/form-data">
     {% csrf_token %}
     <input class="search-price" name="name" type="text"
-        placeholder="Название спутника"><br>
+        placeholder="Название спутника" value="{{ data.name }}"><br>
     <input class="search-price" name="date" type="text"
-        placeholder="Дата полёта">
-    <!--<input class="button-search" class="find-button" type="submit"
+        placeholder="Дата полёта" value="{{ data.date }}">
+    <!--<input class="button-search" type="submit"
         value="Сохранить">-->
 </form>
 
@@ -21,12 +21,12 @@
 <div class="container-cart">
     {% for component in data.components %}
     <div class="card-cart">
-        <img class="cart-img" src="{{ component.imgSrc }}">
+        <img class="cart-img" src="{{ component.idComp.imgSrc }}">
         <div class="cart-div">
-            <p class="title-cart">{{ component.title }}</p>
-            <p class="short-description">{{ component.shortDescription }}</p>
-            <p class="price">{{ component.price }}</p>
-            <div class="button-more">{% include 'component_element.html' with element=component %}</div>
+            <p class="title-cart">{{ component.idComp.title }}</p>
+            <p class="short-description">{{ component.idComp.shortDescription }}</p>
+            <p class="price">{{ component.idComp.price }} ₽</p>
+            <div class="button-more">{% include 'component_element.html' with element=component.idComp %}</div>
         </div>
         <form class="quantity" action="sendQuatity">
             <input class="quantity-input" name="count" type="text" placeholder="0" value="{{ component.count }}">
@@ -34,4 +34,9 @@
     </div>
     {% endfor %}
 </div>
+<form class="deleteAssembly" action="{% url 'delAssembly' %}" method="post">
+    {% csrf_token %}
+    <button class="button-delete" type="submit">Удалить сборку</button>
+    <input type="hidden" value="{{ data.assemblyId }}" name="assemblyId">
+</form>
 {% endblock %}

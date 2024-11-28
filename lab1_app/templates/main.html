@@ -9,7 +9,7 @@
     <input class="search-price" name="down" type="number" placeholder="От" value="{{ data.price_down }}">
     <p class="search-dash">-</p>
     <input class="search-price" name="up" type="number" placeholder="До" value="{{ data.price_up }}">
-    <input class="button-search" class="find-button" type="submit" value="Поиск">
+    <input class="button-search" type="submit" value="Поиск">
 </form>
 
 {% endblock %}
@@ -21,22 +21,40 @@
         <img src="{{ component.imgSrc }}" class="image">
         <p class="title">{{ component.title }}</p>
         <p class="short-description">{{ component.shortDescription }}</p>
-        <p class="price">{{ component.price }}</p>
-        <div class="button-more">{% include 'component_element.html' with element=component %}</div>
+        <p class="price">{{ component.price }} ₽</p>
+        <div class="buttons">
+            <div class="button-more">{% include 'component_element.html' with element=component %}</div>
+            <form class="button-more" action="{% url 'addAssembly' %}" method="post">
+                {% csrf_token %}
+                <button class="card-button" type="submit">Добавить</button>
+                <input type="hidden" value="{{ component.id }}" name="componentId">
+            </form>
+        </div>
     </div>
     {% endfor %}
 
 </div>
 
-<a href="{% url 'assembly' %}">
+{% if data.assemblyId != 0 %}
+<a href="{% url 'assembly' data.assemblyId %}">
     <div class="cart">
         <img src="http://127.0.0.1:9000/lab1/cart.png" class="cart-image">
-        {% if data.cart_counter != 0%}
+        {% if data.cart_counter != 0 %}
         <div class="counter">
             {{ data.cart_counter }}
         </div>
         {% endif %}
     </div>
 </a>
+{% else %}
+<div class="cart">
+    <img src="http://127.0.0.1:9000/lab1/cart.png" class="cart-image">
+    {% if data.cart_counter != 0 %}
+    <div class="counter">
+        {{ data.cart_counter }}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
 
 {% endblock %}
