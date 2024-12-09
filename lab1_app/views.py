@@ -91,17 +91,16 @@ def AddAssembly(request):
     componentsInAssembly = MM.objects.filter(idAssembly=curAssemblyObject)
     
     try:
-        curMMObject = MM.objects.get(idComp=curComponentObject, idAssembly=curAssemblyObject)
-        if curMMObject in componentsInAssembly:
-            curMMObject.count += 1
-            curMMObject.save()
-            print('if')
-        print('try')
-    except:
         addedComponent = MM(idComp=curComponentObject, idAssembly=curAssemblyObject, count=1)
         addedComponent.save()
-        print('except')
-        #componentsInAssembly = MM.objects.filter(idAssembly=curAssemblyObject)
+    except:
+        #curMMObject = MM.objects.get(idComp=curComponentObject, idAssembly=curAssemblyObject)
+        #if curMMObject in componentsInAssembly:
+        #    curMMObject.count += 1
+        #    curMMObject.save()
+        #    print('if')
+        #print('try')
+        return redirect('main')
     
     return redirect('main')
 
