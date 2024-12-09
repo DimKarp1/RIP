@@ -19,6 +19,7 @@ class Assembly(models.Model):
     dateSaved = models.DateField(null=True)
     satelliteName = models.CharField(max_length=150, null=True)
     flyDate = models.DateField(null=True)
+    orbit = models.IntegerField(null=True)
     
     
 class MM(models.Model):
