@@ -1,9 +1,103 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import *
+from .serializers import *
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
 from django.contrib.auth import get_user_model
-from django.db import connection, transaction
-from django.http import Http404
+
+def user():
+    try:
+        user1 = AuthUser.objects.get(id=1)
+    except:
+        user1 = AuthUser(id=1, first_name="Иван", last_name="Иванов", password=1234, username="user1")
+        user1.save()
+    return user1
+
+class ComponentList(APIView):
+    model_class = Component
+    serializer_class = ComponentSerializer
+    
+    # GET список с фильтрацией. В списке услуг возвращается 
+    # id заявки-черновика этого пользователя для страницы 
+    # заявки и количество услуг в этой заявке
+    
+    def get(self, request, format=None):
+        input_down = request.query_params.get('down', '')
+        input_up = request.query_params.get('up', '')
+        if input_down == '':
+            input_down = '0'
+        if input_up == '':
+            input_up = '999999999999'
+        resultComponents = Component.objects.filter(price__range=(int(input_down), int(input_up)))
+        
+        curUserObject = user()
+        curAssemblyObject = Assembly.objects.filter(status='draft', creator=curUserObject).first()
+        componentsInAssembly = MM.objects.filter(idAssembly=curAssemblyObject)
+    
+        if not curAssemblyObject:
+            assemblyId = 0
+        else:
+            assemblyId = curAssemblyObject.pk
+
+        if input_down == '0':
+            input_down = ''
+        if input_up == '999999999999':
+            input_up = ''
+        
+        
+        components = self.model_class.objects.all()
+        serializer = self.serializer_class(components, many=True)
+        return Response(serializer.data)
+    # add filter
+
+    
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ComponentDetail(APIView):
+    model_class = Component
+    serializer_class = ComponentSerializer
+
+    
+    def get(self, request, pk, format=None):
+        component = get_object_or_404(self.model_class, pk=pk)
+        serializer = self.serializer_class(component)
+        return Response(serializer.data)
+
+    
+    def put(self, request, pk, format=None):
+        component = get_object_or_404(self.model_class, pk=pk)
+        serializer = self.serializer_class(component, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    def delete(self, request, pk, format=None):
+        component = get_object_or_404(self.model_class, pk=pk)
+        component.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    # add minio
+
+# Обновляет информацию об акции (для пользователя)    
+@api_view(['Put'])
+def put(self, request, pk, format=None):
+    component = get_object_or_404(self.model_class, pk=pk)
+    serializer = self.serializer_class(component, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 curUser = 1
 

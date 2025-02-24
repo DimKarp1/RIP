@@ -19,7 +19,7 @@ class Assembly(models.Model):
     dateSaved = models.DateField(null=True)
     satelliteName = models.CharField(max_length=150, null=True)
     flyDate = models.DateField(null=True)
-    
+    orbit = models.IntegerField(null=True)    
     
 class MM(models.Model):
     id = models.AutoField(primary_key=True)
@@ -29,3 +29,22 @@ class MM(models.Model):
     
     class Meta:
         unique_together = (('idComp', 'idAssembly'),)
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.BooleanField(default=False)
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.username}'
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
