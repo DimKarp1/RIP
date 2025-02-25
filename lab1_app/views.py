@@ -4,6 +4,7 @@ from .models import *
 from django.contrib.auth import get_user_model
 from django.db import connection, transaction
 from django.http import Http404
+from random import randint
 
 curUser = 1
 
@@ -67,25 +68,28 @@ def GetAssembly(request, id):
         date = ''
     else:
         date = curAssemblyObject.flyDate
+        
+    orbit = curAssemblyObject.orbit
     
     return render(request, 'assembly.html', {'data' : {
         'components': componentsInAssembly,
         'assemblyId': curAssemblyObject.id,
         'name': name,
-        'date': date
+        'date': date,
+        'orbit': orbit
     }})
     
 def AddAssembly(request):
     compId = request.POST['componentId']
     curComponentObject = Component.objects.get(pk=compId)
-    print(compId)
+    #print(compId)
     
     curUserObject = get_user_model().objects.get(pk=curUser)
         
     try:
         curAssemblyObject = Assembly.objects.get(status='draft', creator=curUserObject)
     except:
-        curAssemblyObject = Assembly(creator = curUserObject)
+        curAssemblyObject = Assembly(creator = curUserObject, orbit = randint(160, 2000))
         curAssemblyObject.save()
     
     componentsInAssembly = MM.objects.filter(idAssembly=curAssemblyObject)
