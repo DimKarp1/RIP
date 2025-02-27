@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+admin.site.register(Component)
+admin.site.register(MM)
+admin.site.register(Assembly)
+admin.site.register(AuthUser)
